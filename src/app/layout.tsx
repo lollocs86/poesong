@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   keywords: ["poesong", "musica", "album", "gaza ladra", "italia", "poesia", "canzoni"],
   authors: [{ name: "Pino Sassano" }],
   icons: {
-    icon: "/images/poesong-logo.png",
-    apple: "/images/poesong-logo.png",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
   openGraph: {
     type: "website",
