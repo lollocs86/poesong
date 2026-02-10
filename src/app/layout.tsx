@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: "PoeSong - Musica che racconta storie",
   description: "PoeSong - Musica che racconta storie, emozioni che diventano melodie. Ascolta i nostri album e scopri la nostra musica.",
   keywords: ["poesong", "musica", "album", "gaza ladra", "italia"],
+  icons: {
+    icon: "/images/poesong-logo.png",
+    apple: "/images/poesong-logo.png",
+  },
 };
 
 export default function RootLayout({

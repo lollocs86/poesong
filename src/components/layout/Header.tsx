@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const menuItems = [
@@ -19,10 +20,15 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl md:text-3xl font-bold text-gray-900">
-              Poe<span className="text-blue-500">Song</span>
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/poesong-logo.png"
+              alt="PoeSong"
+              width={150}
+              height={40}
+              className="h-8 md:h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
