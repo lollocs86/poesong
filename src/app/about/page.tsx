@@ -1,4 +1,15 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Chi Siamo | PoeSong',
+  description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong: composizioni dove poesia, musica e tecnologia si incontrano.',
+  openGraph: {
+    title: 'Chi Siamo | PoeSong',
+    description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong.',
+    url: 'https://poesong.it/about',
+  },
+};
 
 export default function About() {
   return (

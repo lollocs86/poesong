@@ -17,6 +17,13 @@ export async function generateMetadata({
   return {
     title: `${post.title} | PoeSong Blog`,
     description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `https://poesong.it/blog/${slug}`,
+      type: 'article',
+      publishedTime: post.date,
+    },
   };
 }
 

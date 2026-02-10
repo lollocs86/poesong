@@ -5,7 +5,12 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Blog | PoeSong',
-  description: 'Articoli, novità e approfondimenti dal mondo PoeSong.',
+  description: 'Articoli, novità e approfondimenti dal mondo PoeSong. Scopri le storie dietro le poesong.',
+  openGraph: {
+    title: 'Blog | PoeSong',
+    description: 'Articoli, novità e approfondimenti dal mondo PoeSong.',
+    url: 'https://poesong.it/blog',
+  },
 };
 
 export default async function BlogPage() {
