@@ -8,7 +8,7 @@ const menuItems = [
   { href: '/', label: 'Home' },
   { href: '/gazaladra', label: 'Gaza Ladra' },
   { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'Chi Siamo' },
+  { href: '/about', label: "L'autore" },
   { href: '/contact', label: 'Contatti' },
 ];
 

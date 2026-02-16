@@ -4,10 +4,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FixedSubtitleBar } from '@/components/FixedSubtitleBar';
 import { FullLyricsModal } from '@/components/FullLyricsModal';
-import { VoteButtons } from '@/components/VoteButtons';
 import { gazaLadraAlbum } from '@/data/albums';
 import { useMusicPlayer } from '@/hooks/useMusicPlayer';
-import { useVotes, VoteType } from '@/hooks/useVotes';
 import { usePlayCounts } from '@/hooks/usePlayCounts';
 import { Track } from '@/types';
 
@@ -92,6 +90,30 @@ export function GazaLadraClient() {
               </p>
             </div>
 
+            {/* Nota d'autore */}
+            <div className="mt-16 border-t border-white/10 pt-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8">
+                Gaza ladra <span className="text-white/50 font-normal text-xl">(nota d&apos;autore)</span>
+              </h2>
+              <div className="space-y-6 text-white/75 text-lg leading-relaxed max-w-3xl">
+                <p>
+                  L&apos;album raccoglie i segni dell&apos;attuale inconsistenza degli eventi, nella sovra comunicazione di immagini e media.
+                </p>
+                <p>
+                  Una riproduzione d&apos;oltre misura che ne depotenzia i significati simbolici e la sostanza concreta della loro drammaticità. In un loop che dissolve la permanenza del carico empatico e la conseguente elaborazione critica necessaria alla consistenza del senso di commozione partecipata.
+                </p>
+                <p>
+                  E la guerra, che maciulla il corpo e i corpi della vita, è dispositivo emblematico del meccanismo abortivo del consumo per lo sviluppo dei sentimenti, dell&apos;immaginazione, dei sogni.
+                </p>
+                <p>
+                  Non a caso gli scenari e le aree si dicono &quot;teatri&quot; di guerra. A maggior ragione per quella che oggi a Gaza vede quali primi attori - a dispetto di dramma e tragedia dei veri protagonisti – capocomici capaci di recitare banali e ancorché applaudite battute da farsa.
+                </p>
+                <p>
+                  I testi della raccolta di poesong &quot;Gaza ladra&quot;, vorrebbero restituire i ritmi e i tempi delle giuste battute di scena, che nell&apos;ironia cogente dei significanti musicati con l&apos;AI, cercano possibile verità.
+                </p>
+              </div>
+            </div>
+
           </div>
         </section>
       </div>
@@ -171,7 +193,6 @@ function MusicPlayerWithState({
 }: MusicPlayerWithStateProps) {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const [shareTrack, setShareTrack] = useState<Track | null>(null);
-  const { vote, getVote, getCounts } = useVotes();
 
   return (
     <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl overflow-hidden shadow-2xl">
@@ -280,9 +301,6 @@ function MusicPlayerWithState({
               isPlaying={isPlaying}
               onPlay={() => playTrack(track)}
               onShare={() => setShareTrack(track)}
-              currentVote={getVote(track.id)}
-              onVote={vote}
-              voteCounts={getCounts(track.id)}
               playCount={getPlayCount(track.id)}
             />
           ))}
@@ -301,16 +319,13 @@ function MusicPlayerWithState({
 }
 
 // Track row component for the track listing
-function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, currentVote, onVote, voteCounts, playCount }: {
+function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, playCount }: {
   track: Track;
   index: number;
   isCurrentTrack: boolean;
   isPlaying: boolean;
   onPlay: () => void;
   onShare: () => void;
-  currentVote: VoteType;
-  onVote: (trackId: string, voteType: VoteType) => void;
-  voteCounts: { likes: number; dislikes: number };
   playCount: number;
 }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -401,13 +416,6 @@ function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, cu
             <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
           </svg>
         </button>
-        <VoteButtons
-          trackId={track.id}
-          currentVote={currentVote}
-          onVote={onVote}
-          likes={voteCounts.likes}
-          dislikes={voteCounts.dislikes}
-        />
         <span className="text-xs text-white/40 flex-shrink-0 ml-2" title="Riproduzioni">
           <span className="inline-flex items-center gap-1">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -473,18 +481,6 @@ function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, cu
                 Condividi
               </button>
               <div className="border-t border-white/10 my-2" />
-              <div className="px-4 py-2 flex items-center justify-between">
-                <span className="text-xs text-white/50">Mi piace</span>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <VoteButtons
-                    trackId={track.id}
-                    currentVote={currentVote}
-                    onVote={onVote}
-                    likes={voteCounts.likes}
-                    dislikes={voteCounts.dislikes}
-                  />
-                </div>
-              </div>
               <div className="px-4 py-2 flex items-center justify-between">
                 <span className="text-xs text-white/50">Riproduzioni</span>
                 <span className="text-xs text-white/80">{playCount}</span>

@@ -47,28 +47,22 @@ export default function About() {
         />
       </section>
 
-      {/* Bio Section */}
+      {/* Bio AI Section */}
       <section className="relative overflow-hidden bg-[#1e3a5f]">
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             {/* Left: Author identity */}
             <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
-              {/* Author icon / visual */}
               <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-[#4facfe] to-[#00f2fe] flex items-center justify-center mb-6 shadow-2xl">
                 <svg className="w-20 h-20 sm:w-24 sm:h-24 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center lg:text-left">
                 Pino <span className="text-[#5b9bd5]">Sassano</span>
               </h2>
               <p className="text-white/50 mt-2 text-sm uppercase tracking-widest text-center lg:text-left">
-                Autore &amp; Sperimentatore
+                secondo AI
               </p>
             </div>
 
@@ -87,6 +81,53 @@ export default function About() {
                 <p>
                   La sua cifra distintiva è la fusione tra sensibilità letteraria e curiosità per i nuovi strumenti creativi, in un percorso che interpreta la poesia non solo come pagina, ma come <strong className="text-[#5b9bd5] font-semibold">spazio sonoro e narrativo</strong> in continua evoluzione.
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Diagonal separator bottom */}
+        <div
+          className="absolute bottom-0 left-0 w-full h-24 bg-[#152d4a]"
+          style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
+        />
+      </section>
+
+      {/* Bio Reale Section */}
+      <section className="relative overflow-hidden bg-[#152d4a]">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            {/* Left: Author identity */}
+            <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-[#f97316] to-[#ef4444] flex items-center justify-center mb-6 shadow-2xl">
+                <svg className="w-20 h-20 sm:w-24 sm:h-24 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center lg:text-left">
+                Pino <span className="text-[#f97316]">Sassano</span>
+              </h2>
+              <p className="text-white/50 mt-2 text-sm uppercase tracking-widest text-center lg:text-left">
+                Autore &amp; Sperimentatore
+              </p>
+            </div>
+
+            {/* Right: Bio text */}
+            <div className="lg:col-span-8">
+              <div className="space-y-6 text-white/85 text-lg leading-relaxed">
+                <p>
+                  Pino Sassano è nato a Salerno l&apos;11 giugno del 1958 e risiede a Hammamet. Cosenza è la sua città d&apos;adozione.
+                </p>
+                <p>
+                  Scrive romanzi, racconti, poesie, saggi e poesong. Ha scritto il romanzo <strong className="text-[#f97316] font-semibold">&quot;Alias MM&quot;</strong> (Premio Mediterraneo e Premio Proviero) e la serie di racconti <strong className="text-[#f97316] font-semibold">&quot;Senza grazie&quot;</strong> (Premio Unikairos) per Infinito edizioni. &quot;Senza grazie&quot; è anche il Book Show, spettacolo che porta in scena insieme a Leon Pantarei (musicista) e Marisa Casciaro (attrice danzante).
+                </p>
+                <p>
+                  Collabora con riviste, quotidiani, emittenti radio e tv. A Cosenza ha fondato la Libreria Mondadori, di cui cura le attività di diffusione e promozione della lettura. Tra queste: la festa della lettura <strong className="text-[#f97316] font-semibold">&quot;Materiaprima&quot;</strong> e il progetto <strong className="text-[#f97316] font-semibold">&quot;Slowbook&quot;</strong>, già presieduto dallo scrittore Andrea Camilleri.
+                </p>
+                <p>
+                  Nel 2023 ha ideato il concorso <strong className="text-[#f97316] font-semibold">&quot;Intrecci Mediterranei&quot;</strong>: un &quot;ponte letterario&quot; tra Tunisia e Italia con la presidenza onoraria dello scrittore Maurizio de Giovanni e il sostegno dell&apos;Istituto Italiano di Cultura di Tunisi. Un&apos;esperienza evoluta nel progetto di scambio letterario tra autori tunisini e italiani <strong className="text-[#f97316] font-semibold">&quot;Tracce Mediterranee&quot;</strong>.
+                </p>
+                <p className="text-white/50 text-sm">Hammamet, 01.01.2026</p>
               </div>
             </div>
           </div>

@@ -37,12 +37,23 @@ export default function Home() {
           <p className="text-xl sm:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
             Ci sono storie che vibrano appena sotto la superficie del quotidiano, parole non dette che pesano nell&apos;aria e ritmi che battono al passo con le nostre.
           </p>
+          {/* Album Cover */}
+          <div className="mb-8">
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 mx-auto rounded-lg overflow-hidden shadow-2xl">
+              <Image
+                src="/images/gazaladra-cover.jpg"
+                alt="Gaza Ladra - Album Cover"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/gazaladra"
               className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all hover:scale-105 shadow-lg"
             >
-              Ascolta Gaza Ladra
+              Ascolta e leggi Gaza ladra
             </Link>
             <Link
               href="/about"
@@ -120,9 +131,26 @@ export default function Home() {
         </div>
 
         <div className="relative max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight">
+          {/* Album Title and Cover */}
+          <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
+            <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-2xl flex-shrink-0">
+              <Image
+                src="/images/gazaladra-cover.jpg"
+                alt="Gaza Ladra - Album Cover"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white">
+                Gaza Ladra
+              </h2>
+            </div>
+          </div>
+
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight">
             Dove le parole della cronaca si fermano,
-          </h2>
+          </h3>
           <p className="text-lg lg:text-xl text-white/90 leading-relaxed mb-12">
             assordate dal frastuono e accecate dalla polvere, inizia il nostro canto. Queste non sono solo poesie; sono i sussurri raccolti tra le macerie, le ninne nanne mai finite, le preghiere laiche levate al cielo di Gaza. Le abbiamo vestite di musica non per coprire il dolore, ma per permettergli di viaggiare oltre i confini del filo spinato e dell&apos;indifferenza. Ogni nota è un passo tra le rovine, ogni verso un tentativo di restituire un nome e una storia ai silenzi. Questo è un requiem per ciò che è stato perso e un inno alla vita che, ostinatamente, resiste.
           </p>
@@ -144,6 +172,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#4facfe] to-[#00f2fe]" />
 
         <div className="relative max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-10">Nota dell&apos;autore</h2>
           <div className="space-y-5 text-white/90 italic text-lg lg:text-xl leading-relaxed">
             <p>
               Da un po&apos; di tempo mi diverto a scrivere &quot;poesong&quot;.
@@ -155,7 +184,7 @@ export default function Home() {
               Per la musica, al momento, interagisco con l&apos;AI di <a href="https://suno.ai" target="_blank" rel="noopener noreferrer" className="text-white hover:text-white/80 underline decoration-white/50">Suno</a>, che uso anche per scegliere le voci degli interpreti.
             </p>
             <p>
-              L&apos;ideale sarebbe ascoltare i brani leggendo i testi. Entrambi si possono scaricare gratuitamente.
+              L&apos;ideale è ascoltare i brani leggendo i testi. Entrambi si possono scaricare gratuitamente.
             </p>
             <p>
               Consiglio delle cuffie o una cassa esterna per un audio migliore.
@@ -164,7 +193,7 @@ export default function Home() {
               Esplorando il sito si può scoprire come funziona e perché faccio tutto questo.
             </p>
             <p>
-              Il tutto è ancora un &quot;cantiere aperto&quot;, quindi opinioni e consigli saranno più che preziosi per migliorarlo.
+              Il tutto è un &quot;cantiere aperto&quot;, quindi opinioni e consigli saranno più che preziosi per migliorarlo.
             </p>
             <div className="pt-10 not-italic">
               <p className="text-white/70">Hammamet, 15 dicembre 2025</p>

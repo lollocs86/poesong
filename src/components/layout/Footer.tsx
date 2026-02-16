@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCookieConsent } from '@/context/CookieContext';
 
 export function Footer() {
@@ -12,8 +13,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <Link href="/" className="text-2xl font-bold">
-              Poe<span className="text-blue-400">Song</span>
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/images/poesong-logo.png"
+                alt="PoeSong Logo"
+                width={40}
+                height={40}
+                className="rounded bg-white p-1"
+              />
+              <span className="text-2xl font-bold">Poe<span className="text-blue-400">Song</span></span>
             </Link>
             <p className="mt-4 text-gray-400 text-sm">
               Musica che racconta storie, emozioni che diventano melodie.
@@ -41,7 +49,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-                  Chi Siamo
+                  L&apos;autore
                 </Link>
               </li>
               <li>

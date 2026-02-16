@@ -69,7 +69,7 @@ export default function Contact() {
             <span className="text-blue-300">Contatti</span>
           </h1>
           <p className="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto">
-            Scrivici per qualsiasi domanda o collaborazione
+            Scrivici per qualsiasi domanda, commento e proposta di collaborazione
           </p>
         </div>
 

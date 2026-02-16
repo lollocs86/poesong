@@ -188,7 +188,7 @@ export const gazaLadraAlbum: Album = {
   id: 'gazaladra',
   title: 'Gaza Ladra',
   artist: 'Poesong',
-  coverUrl: '/images/gazaladra-cover.svg',
+  coverUrl: '/images/gazaladra-cover.jpg',
   releaseYear: 2024,
   tracks: gazaLadraTracks,
   description: 'Un viaggio musicale attraverso emozioni e paesaggi sonori unici.',

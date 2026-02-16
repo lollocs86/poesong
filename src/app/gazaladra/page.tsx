@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     url: 'https://poesong.it/gazaladra',
     images: [
       {
-        url: '/images/gazaladra-cover.svg',
+        url: '/images/gazaladra-cover.jpg',
         width: 1200,
         height: 630,
         alt: 'Gaza Ladra - Album Cover',
