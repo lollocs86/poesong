@@ -41,9 +41,7 @@ export default function PrivacyPolicy() {
           </p>
           <div className="bg-gray-50 p-6 rounded-lg not-prose mb-6">
             <p className="mb-1"><strong>Giuseppe Sassano</strong></p>
-            <p className="mb-1">Via Mario Dodaro 8 - 87040 Castrolibero (CS), Italia</p>
             <p className="mb-1">Codice Fiscale: SSSGPP58H11H703G</p>
-            <p className="mb-1">Telefono: +39 392 961 9631</p>
             <p>Email: <a href="mailto:pinosassano@hotmail.com" className="text-blue-600 hover:underline">pinosassano@hotmail.com</a></p>
           </div>
 
@@ -128,8 +126,6 @@ export default function PrivacyPolicy() {
           </p>
           <ul>
             <li>Email: <a href="mailto:pinosassano@hotmail.com">pinosassano@hotmail.com</a></li>
-            <li>Telefono: +39 392 961 9631</li>
-            <li>Indirizzo: Via Mario Dodaro 8 - 87040 Castrolibero (CS), Italia</li>
           </ul>
 
         </div>
