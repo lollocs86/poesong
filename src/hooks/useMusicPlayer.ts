@@ -17,6 +17,7 @@ interface UseMusicPlayerReturn {
   setVolume: (volume: number) => void;
   toggleMute: () => void;
   playTrack: (track: Track) => void;
+  loadTrack: (track: Track) => void;
   nextTrack: () => void;
   previousTrack: () => void;
   playlist: Track[];
@@ -83,7 +84,7 @@ export function useMusicPlayer(initialPlaylist: Track[] = [], onTrackEnd?: (trac
     };
   }, [playlist]);
 
-  const playTrack = useCallback((track: Track) => {
+  const loadTrack = useCallback((track: Track) => {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -93,10 +94,13 @@ export function useMusicPlayer(initialPlaylist: Track[] = [], onTrackEnd?: (trac
       currentTrackRef.current = track;
       setCurrentTime(0);
     }
-
-    audio.play().catch(console.error);
-    setIsPlaying(true);
   }, [currentTrack]);
+
+  const playTrack = useCallback((track: Track) => {
+    loadTrack(track);
+    audioRef.current?.play().catch(console.error);
+    // isPlaying will be set by the 'play' event listener
+  }, [loadTrack]);
 
   const play = useCallback((track?: Track) => {
     if (track) {
@@ -110,7 +114,7 @@ export function useMusicPlayer(initialPlaylist: Track[] = [], onTrackEnd?: (trac
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
-    setIsPlaying(false);
+    // isPlaying will be set by the 'pause' event listener
   }, []);
 
   const toggle = useCallback(() => {
@@ -176,6 +180,7 @@ export function useMusicPlayer(initialPlaylist: Track[] = [], onTrackEnd?: (trac
     setVolume,
     toggleMute,
     playTrack,
+    loadTrack,
     nextTrack,
     previousTrack,
     playlist,

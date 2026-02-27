@@ -32,15 +32,14 @@ export function DAlaricClient() {
     seek,
     setVolume,
     toggleMute,
-    playTrack,
+    loadTrack,
     setPlaylist,
   } = useMusicPlayer([dAlarico], increment);
 
   useEffect(() => {
     setPlaylist([dAlarico]);
-    // Auto-play the track on load
-    playTrack(dAlarico);
-  }, [setPlaylist, playTrack]);
+    loadTrack(dAlarico);
+  }, [setPlaylist, loadTrack]);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const playCount = getPlayCount(dAlarico.id);
