@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chi Siamo | PoeSong',
+  title: 'L\'autore | PoeSong',
   description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong: composizioni dove poesia, musica e tecnologia si incontrano.',
   openGraph: {
-    title: 'Chi Siamo | PoeSong',
+    title: 'L\'autore | PoeSong',
     description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong.',
     url: 'https://poesong.it/about',
   },
@@ -32,12 +32,9 @@ export default function About() {
 
         {/* Content */}
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto pt-24 pb-16 animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
-            Chi <span className="text-blue-300">Siamo</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
+            L'<span className="text-blue-300">autore</span>
           </h1>
-          <p className="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto">
-            La voce dietro le poesong
-          </p>
         </div>
 
         {/* Diagonal separator bottom */}
