@@ -64,7 +64,7 @@ export function useMusicPlayer(initialPlaylist: Track[] = [], onTrackEnd?: (trac
         onTrackEndRef.current?.(currentTrackRef.current.id);
       }
       setIsPlaying(false);
-      nextTrack();
+      // Track ends and stops, no auto-next
     };
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
