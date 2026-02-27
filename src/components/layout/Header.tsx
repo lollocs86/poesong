@@ -26,7 +26,7 @@ export function Header() {
               alt="PoeSong"
               width={150}
               height={40}
-              className="h-8 md:h-10 w-auto"
+              className="h-8 md:h-10 w-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
               priority
             />
           </Link>
