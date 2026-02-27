@@ -148,10 +148,8 @@ export default function Home() {
             </div>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight">
-            Dove le parole della cronaca si fermano,
-          </h3>
           <p className="text-lg lg:text-xl text-white/90 leading-relaxed mb-12">
+            <span className="italic">Dove le parole della cronaca si fermano,</span>{' '}
             assordate dal frastuono e accecate dalla polvere, inizia il nostro canto. Queste non sono solo poesie; sono i sussurri raccolti tra le macerie, le ninne nanne mai finite, le preghiere laiche levate al cielo di Gaza. Le abbiamo vestite di musica non per coprire il dolore, ma per permettergli di viaggiare oltre i confini del filo spinato e dell&apos;indifferenza. Ogni nota è un passo tra le rovine, ogni verso un tentativo di restituire un nome e una storia ai silenzi. Questo è un requiem per ciò che è stato perso e un inno alla vita che, ostinatamente, resiste.
           </p>
           <Link
