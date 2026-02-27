@@ -190,7 +190,7 @@ export default function Home() {
               Esplorando il sito si può scoprire come funziona e perché faccio tutto questo.
             </p>
             <p>
-              Il tutto è un &quot;cantiere aperto&quot;, quindi opinioni e consigli saranno più che preziosi per migliorarlo.
+              Poesong è un &quot;cantiere aperto&quot;, quindi opinioni e consigli saranno più che preziosi per migliorarlo.
             </p>
             <div className="pt-10 not-italic">
               <p className="text-white/70">Hammamet, 15 dicembre 2025</p>
