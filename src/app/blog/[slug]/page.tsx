@@ -71,6 +71,9 @@ export default async function BlogPostPage({
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">{post.title}</h1>
+          {post.excerpt && (
+            <p className="text-lg text-blue-200 mt-4 italic">{post.excerpt}</p>
+          )}
         </div>
       </section>
 
