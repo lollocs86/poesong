@@ -31,10 +31,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/d-alarico`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/cookie-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
   ];
 
@@ -47,5 +65,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogPages];
+  // Tracce audio dell'album
+  const audioTracks: MetadataRoute.Sitemap = [
+    'd-alarico',
+    'track-01',
+    'track-02',
+    'track-03',
+    'track-04',
+    'track-05',
+    'track-06',
+    'track-07',
+    'track-08',
+    'track-09',
+    'track-10',
+    'track-11',
+    'track-12',
+    'track-13',
+    'track-14',
+    'track-15',
+  ].map((track) => ({
+    url: `${baseUrl}/audio/${track}.mp3`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly' as const,
+    priority: 0.5,
+  }));
+
+  return [...staticPages, ...blogPages, ...audioTracks];
 }
