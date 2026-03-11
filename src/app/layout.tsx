@@ -46,8 +46,15 @@ export const metadata: Metadata = {
     images: ["/images/poesong-logo.png"],
   },
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://poesong.it',
   },
 };
 

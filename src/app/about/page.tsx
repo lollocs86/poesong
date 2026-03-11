@@ -4,6 +4,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'L\'autore | PoeSong',
   description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong: composizioni dove poesia, musica e tecnologia si incontrano.',
+  alternates: {
+    canonical: 'https://poesong.it/about',
+  },
   openGraph: {
     title: 'L\'autore | PoeSong',
     description: 'Scopri Pino Sassano, autore e sperimentatore italiano di poesong.',

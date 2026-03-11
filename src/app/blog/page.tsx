@@ -6,6 +6,9 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Blog | PoeSong',
   description: 'Articoli, novità e approfondimenti dal mondo PoeSong. Scopri le storie dietro le poesong.',
+  alternates: {
+    canonical: 'https://poesong.it/blog',
+  },
   openGraph: {
     title: 'Blog | PoeSong',
     description: 'Articoli, novità e approfondimenti dal mondo PoeSong.',
