@@ -37,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/a-sandro-e-a-enzo`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
@@ -68,6 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Tracce audio dell'album
   const audioTracks: MetadataRoute.Sitemap = [
     'd-alarico',
+    'a-sandro-e-a-enzo',
     'track-01',
     'track-02',
     'track-03',
