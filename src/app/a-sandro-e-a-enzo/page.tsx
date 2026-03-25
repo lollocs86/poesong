@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     url: 'https://poesong.it/a-sandro-e-a-enzo',
     images: [
       {
-        url: '/icon.png',
+        url: '/images/a-sandro-e-a-enzo.jpg',
         width: 1200,
         height: 630,
-        alt: 'A Sandro e a Enzo',
+        alt: 'Sandro ed Enzo',
       },
     ],
   },

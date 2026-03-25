@@ -86,11 +86,13 @@ export function ASandroEAEnzoClient() {
               <div className="relative p-6 md:p-8 bg-gradient-to-b from-violet-900/50 to-transparent">
                 <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
                   <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-2xl flex-shrink-0">
-                    <div className="w-full h-full bg-gradient-to-br from-violet-600 to-orange-500 flex items-center justify-center">
-                      <svg className="w-20 h-20 text-white/80" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                      </svg>
-                    </div>
+                    <Image
+                      src="/images/a-sandro-e-a-enzo.jpg"
+                      alt="Sandro ed Enzo"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
                   </div>
                   <div className="text-center md:text-left">
                     <p className="text-sm font-medium text-white/70 uppercase tracking-wider">Brano</p>
