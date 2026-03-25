@@ -98,13 +98,32 @@ export function ASandroEAEnzoClient() {
                     <p className="text-sm font-medium text-white/70 uppercase tracking-wider">Brano</p>
                     <h1 className="text-3xl md:text-5xl font-bold text-white mt-2">{aSandroEAEnzo.title}</h1>
                     <p className="text-lg text-white/80 mt-2">{aSandroEAEnzo.artist}</p>
-                    <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
-                      <span className="text-sm text-white/60 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
+                    <p className="text-xs text-white/50 mt-1">{playCount} riproduzioni</p>
+                    <div className="flex items-center justify-center md:justify-start gap-4 mt-6">
+                      <button
+                        onClick={toggle}
+                        className="w-16 h-16 bg-orange-500 hover:bg-orange-400 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-lg"
+                        aria-label={isPlaying ? 'Pausa' : 'Riproduci'}
+                      >
+                        {isPlaying ? (
+                          <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                          </svg>
+                        ) : (
+                          <svg className="w-8 h-8 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        )}
+                      </button>
+                      <button
+                        onClick={handleDownload}
+                        className="p-4 text-white/60 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                        title="Scarica MP3"
+                      >
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                         </svg>
-                        {playCount} riproduzioni
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </div>
