@@ -98,7 +98,6 @@ export function ASandroEAEnzoClient() {
                     <p className="text-sm font-medium text-white/70 uppercase tracking-wider">Brano</p>
                     <h1 className="text-3xl md:text-5xl font-bold text-white mt-2">{aSandroEAEnzo.title}</h1>
                     <p className="text-lg text-white/80 mt-2">{aSandroEAEnzo.artist}</p>
-                    <p className="text-xs text-white/50 mt-1">{playCount} riproduzioni</p>
                     <div className="flex items-center justify-center md:justify-start gap-4 mt-6">
                       <button
                         onClick={toggle}
@@ -125,6 +124,7 @@ export function ASandroEAEnzoClient() {
                         </svg>
                       </button>
                     </div>
+                    <p className="text-xs text-white/50 mt-3">{playCount} riproduzioni</p>
                   </div>
                 </div>
               </div>
