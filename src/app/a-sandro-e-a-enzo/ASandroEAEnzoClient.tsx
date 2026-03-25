@@ -131,41 +131,7 @@ export function ASandroEAEnzoClient() {
 
               {/* Player Controls */}
               <div className="px-6 md:px-8 py-4 bg-black/30">
-                {currentTrack && (
-                  <div className="text-center mb-4">
-                    <p className="text-white font-medium">{currentTrack.title}</p>
-                    <p className="text-white/60 text-sm">{currentTrack.artist}</p>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-center gap-4 md:gap-6">
-                  <button
-                    onClick={toggle}
-                    className="w-14 h-14 bg-orange-500 hover:bg-orange-400 rounded-full flex items-center justify-center transition-all hover:scale-105"
-                    aria-label={isPlaying ? 'Pausa' : 'Riproduci'}
-                  >
-                    {isPlaying ? (
-                      <svg className="w-7 h-7 text-black" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                      </svg>
-                    ) : (
-                      <svg className="w-7 h-7 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                    )}
-                  </button>
-                  <button
-                    onClick={handleDownload}
-                    className="p-3 text-white/60 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-                    title="Scarica MP3"
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-3 mt-4">
+                <div className="flex items-center gap-3">
                   <span className="text-xs text-white/60 w-10 text-right">{formatTime(currentTime)}</span>
                   <div className="flex-1 relative group">
                     <input
