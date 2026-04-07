@@ -9,6 +9,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.poesong.it',
+          },
+        ],
+        destination: 'https://poesong.it/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
