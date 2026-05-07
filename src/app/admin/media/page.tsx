@@ -89,8 +89,8 @@ export default function AdminMediaPage() {
       } else {
         setMessage({ type: 'error', text: data.error || 'Errore caricamento.' });
       }
-    } catch {
-      setMessage({ type: 'error', text: 'Errore connessione.' });
+    } catch (err) {
+      setMessage({ type: 'error', text: `Errore: ${err instanceof Error ? err.message : String(err)}` });
     } finally {
       setUploading(null);
       pendingUpload.current = null;
@@ -343,6 +343,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       if (res.ok) {
         setForm({ title: '', artist: 'Poesong', coverUrl: '' });
         onTrackCreated();
+        window.open('/singoli', '_blank');
       }
     } finally {
       setSaving(false);
