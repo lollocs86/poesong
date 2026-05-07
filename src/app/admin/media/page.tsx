@@ -123,8 +123,8 @@ export default function AdminMediaPage() {
 
   return (
     <div className="min-h-[80vh] bg-gray-900 -mx-4 sm:-mx-6 lg:-mx-8">
-      <input ref={audioInputRef} type="file" accept=".mp3" className="hidden" onChange={(e) => handleFileSelected(e, 'audio')} />
-      <input ref={lyricsInputRef} type="file" accept=".ttml" className="hidden" onChange={(e) => handleFileSelected(e, 'lyrics')} />
+      <input ref={audioInputRef} type="file" accept=".mp3" className="sr-only" onChange={(e) => handleFileSelected(e, 'audio')} />
+      <input ref={lyricsInputRef} type="file" accept=".ttml" className="sr-only" onChange={(e) => handleFileSelected(e, 'lyrics')} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -278,7 +278,7 @@ function TrackSection({ title, type, tracks, existingFiles, uploading, onUpload,
                       {exists ? 'Sostituisci' : 'Carica'}
                     </button>
                     {exists && (
-                      <button onClick={() => onDelete(filename)} className="text-gray-600 hover:text-red-400 transition-colors p-1 opacity-0 group-hover:opacity-100" title="Elimina">
+                      <button onClick={() => onDelete(filename)} className="text-gray-600 hover:text-red-400 transition-colors p-1 opacity-40 hover:opacity-100" title="Elimina">
                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                       </button>
                     )}
@@ -406,7 +406,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
                     <div className="flex-1 min-w-0">
                       <div className="text-gray-300 text-sm font-mono truncate">{f.name}</div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100">
+                    <div className="flex items-center gap-2 flex-shrink-0 opacity-40 hover:opacity-100">
                       <a href={f.url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors text-xs">URL</a>
                       <button onClick={() => onDelete(f.name, type)} className="text-gray-600 hover:text-red-400 transition-colors p-1" title="Elimina">
                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -447,7 +447,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
                 <button
                   onClick={() => handleDeleteTrack(t.id)}
                   disabled={deletingId === t.id}
-                  className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
+                  className="opacity-40 hover:opacity-100 text-gray-500 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
                   title="Elimina traccia"
                 >
                   {deletingId === t.id
