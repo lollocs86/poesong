@@ -79,12 +79,26 @@ export default function AdminBlogDashboard() {
               {posts.length} articol{posts.length === 1 ? 'o' : 'i'}
             </p>
           </div>
-          <Link
-            href="/admin/blog/new"
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            + Nuovo Articolo
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/dashboard"
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+            >
+              ← Pannello
+            </Link>
+            <Link
+              href="/admin/media"
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+            >
+              Media
+            </Link>
+            <Link
+              href="/admin/blog/new"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              + Nuovo Articolo
+            </Link>
+          </div>
         </div>
 
         {/* Table */}
