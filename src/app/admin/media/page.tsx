@@ -299,8 +299,27 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   onDelete: (filename: string, type: FileType) => void;
   onTrackCreated: () => void;
 }) {
-  const [form, setForm] = useState({ title: '', artist: 'Poesong', albumId: albums[0].id, duration: '', audioUrl: '', lyricsUrl: '' });
+  const [form, setForm] = useState({ title: '', artist: 'Poesong', albumId: albums[0].id, audioUrl: '', lyricsUrl: '', coverUrl: '' });
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('type', 'images');
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (res.ok) setForm((f) => ({ ...f, coverUrl: data.url }));
+    } finally {
+      setUploadingImage(false);
+      if (imageInputRef.current) imageInputRef.current.value = '';
+    }
+  }
 
   async function handleCreate(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -314,13 +333,14 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
           artist: form.artist,
           album: albums.find((a) => a.id === form.albumId)?.title ?? '',
           albumId: form.albumId,
-          duration: Number(form.duration) || 0,
+          duration: 0,
           audioUrl: form.audioUrl,
           lyricsUrl: form.lyricsUrl || undefined,
+          coverUrl: form.coverUrl || undefined,
         }),
       });
       if (res.ok) {
-        setForm({ title: '', artist: 'Poesong', albumId: albums[0].id, duration: '', audioUrl: '', lyricsUrl: '' });
+        setForm({ title: '', artist: 'Poesong', albumId: albums[0].id, audioUrl: '', lyricsUrl: '', coverUrl: '' });
         onTrackCreated();
       }
     } finally {
@@ -370,6 +390,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       {/* Crea traccia form */}
       <div className="bg-gray-800 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-6">Crea traccia</h2>
+        <input ref={imageInputRef} type="file" accept=".jpg,.jpeg,.png,.webp,.gif" className="hidden" onChange={handleImageUpload} />
         <form onSubmit={handleCreate} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -404,15 +425,25 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Durata (secondi)</label>
-              <input
-                type="number"
-                min="0"
-                value={form.duration}
-                onChange={(e) => setForm({ ...form, duration: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="es. 213"
-              />
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Immagine copertina</label>
+              <div className="flex items-center gap-3">
+                {form.coverUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.coverUrl} alt="cover" className="w-10 h-10 rounded object-cover flex-shrink-0" />
+                ) : (
+                  <div className="w-10 h-10 rounded bg-gray-700 border border-gray-600 flex items-center justify-center flex-shrink-0">
+                    <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  disabled={uploadingImage}
+                  className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-300 text-sm hover:border-purple-500 transition-colors text-left disabled:opacity-50"
+                >
+                  {uploadingImage ? 'Caricamento...' : form.coverUrl ? 'Cambia immagine' : 'Carica immagine'}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -445,7 +476,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
           <div className="flex justify-end pt-2">
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || uploadingImage}
               className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-900 text-white font-semibold rounded-lg transition-colors"
             >
               {saving ? 'Salvataggio...' : 'Crea traccia'}

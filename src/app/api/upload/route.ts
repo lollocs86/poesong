@@ -11,14 +11,19 @@ async function checkAuth() {
 }
 
 const FILE_CONFIG = {
-  audio: { prefix: 'audio/', ext: '.mp3' },
-  lyrics: { prefix: 'lyrics/', ext: '.ttml' },
+  audio:  { prefix: 'audio/',  exts: ['.mp3'] },
+  lyrics: { prefix: 'lyrics/', exts: ['.ttml'] },
+  images: { prefix: 'images/', exts: ['.jpg', '.jpeg', '.png', '.webp', '.gif'] },
 } as const;
 
 type FileType = keyof typeof FILE_CONFIG;
 
 function isValidType(type: string): type is FileType {
   return type in FILE_CONFIG;
+}
+
+function validExt(type: FileType, ext: string): boolean {
+  return (FILE_CONFIG[type].exts as readonly string[]).includes(ext);
 }
 
 export async function GET(request: NextRequest) {
@@ -32,9 +37,10 @@ export async function GET(request: NextRequest) {
   }
 
   const { blobs } = await list({ prefix: FILE_CONFIG[type].prefix });
+  const exts = FILE_CONFIG[type].exts as readonly string[];
   const files = blobs
     .map((b) => ({ name: b.pathname.split('/').pop()!, url: b.url }))
-    .filter((f) => f.name.endsWith(FILE_CONFIG[type].ext))
+    .filter((f) => exts.some((e) => f.name.endsWith(e)))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return NextResponse.json({ files });
@@ -54,12 +60,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'File o tipo mancante' }, { status: 400 });
   }
 
-  const config = FILE_CONFIG[type];
   const ext = path.extname(file.name).toLowerCase();
-
-  if (ext !== config.ext) {
+  if (!validExt(type, ext)) {
     return NextResponse.json(
-      { error: `Estensione non valida. Atteso: ${config.ext}` },
+      { error: `Estensione non valida per ${type}` },
       { status: 400 }
     );
   }
@@ -67,7 +71,7 @@ export async function POST(request: NextRequest) {
   let filename: string;
   if (targetFilename) {
     const tExt = path.extname(targetFilename).toLowerCase();
-    if (tExt !== config.ext) {
+    if (!validExt(type, tExt)) {
       return NextResponse.json({ error: 'targetFilename estensione non valida' }, { status: 400 });
     }
     const tBase = path.basename(targetFilename, tExt).replace(/[^a-zA-Z0-9\-_]/g, '-').toLowerCase();
@@ -77,7 +81,7 @@ export async function POST(request: NextRequest) {
     filename = `${base}${ext}`;
   }
 
-  const pathname = `${config.prefix}${filename}`;
+  const pathname = `${FILE_CONFIG[type].prefix}${filename}`;
   const blob = await put(pathname, file, { access: 'public', addRandomSuffix: false });
 
   return NextResponse.json({ success: true, filename, url: blob.url });
@@ -95,16 +99,13 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'Parametri mancanti' }, { status: 400 });
   }
 
-  const config = FILE_CONFIG[type];
   const ext = path.extname(filename).toLowerCase();
-
-  if (ext !== config.ext || filename.includes('/') || filename.includes('..')) {
+  if (!validExt(type, ext) || filename.includes('/') || filename.includes('..')) {
     return NextResponse.json({ error: 'Nome file non valido' }, { status: 400 });
   }
 
-  // Find blob URL by pathname
-  const { blobs } = await list({ prefix: `${config.prefix}${filename}` });
-  const blob = blobs.find((b) => b.pathname === `${config.prefix}${filename}`);
+  const { blobs } = await list({ prefix: `${FILE_CONFIG[type].prefix}${filename}` });
+  const blob = blobs.find((b) => b.pathname === `${FILE_CONFIG[type].prefix}${filename}`);
 
   if (!blob) {
     return NextResponse.json({ error: 'File non trovato' }, { status: 404 });
