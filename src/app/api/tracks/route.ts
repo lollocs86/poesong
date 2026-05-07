@@ -29,7 +29,7 @@ async function readTracks(): Promise<ExtraTrack[]> {
     const { blobs } = await list({ prefix: TRACKS_BLOB_PATH });
     const blob = blobs.find((b) => b.pathname === TRACKS_BLOB_PATH);
     if (!blob) return [];
-    const res = await fetch(blob.url, { cache: 'no-store' });
+    const res = await fetch(`${blob.url}?t=${Date.now()}`, { cache: 'no-store' });
     return await res.json();
   } catch {
     return [];

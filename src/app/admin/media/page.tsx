@@ -328,7 +328,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
     try {
       const res = await fetch(`/api/tracks?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
       if (res.ok) {
-        await fetchTracks();
+        setTracks((prev) => prev.filter((t) => t.id !== id));
       } else {
         const data = await res.json().catch(() => ({}));
         setDeleteError(data.error || `Errore ${res.status}`);
@@ -384,8 +384,8 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       });
       const data = await res.json();
       if (res.ok) {
+        setTracks((prev) => [...prev, data as SingleTrack]);
         setForm({ title: '', artist: 'Poesong', coverUrl: '' });
-        await fetchTracks();
         onTrackCreated();
       } else {
         setFormError(`Errore: ${data.error || res.status}`);
