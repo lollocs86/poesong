@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
   const pathname = `${FILE_CONFIG[type].prefix}${filename}`;
   try {
-    const blob = await put(pathname, file, { access: 'public', addRandomSuffix: false });
+    const blob = await put(pathname, file, { access: 'public', addRandomSuffix: false, allowOverwrite: true });
     return NextResponse.json({ success: true, filename, url: blob.url });
   } catch (err) {
     return NextResponse.json({ error: `Errore blob: ${err instanceof Error ? err.message : String(err)}` }, { status: 500 });

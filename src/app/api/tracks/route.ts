@@ -40,6 +40,7 @@ async function writeTracks(tracks: ExtraTrack[]) {
   await put(TRACKS_BLOB_PATH, JSON.stringify(tracks), {
     access: 'public',
     addRandomSuffix: false,
+    allowOverwrite: true,
     contentType: 'application/json',
   });
 }
