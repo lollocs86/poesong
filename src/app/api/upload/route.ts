@@ -4,6 +4,8 @@ import { verifySessionToken, COOKIE_NAME } from '@/lib/auth';
 import { put, list, del } from '@vercel/blob';
 import path from 'path';
 
+export const maxDuration = 60; // seconds, for large file uploads
+
 async function checkAuth() {
   const cookieStore = await cookies();
   const session = cookieStore.get(COOKIE_NAME);
@@ -11,9 +13,11 @@ async function checkAuth() {
 }
 
 const FILE_CONFIG = {
-  audio:  { prefix: 'audio/',  exts: ['.mp3'] },
-  lyrics: { prefix: 'lyrics/', exts: ['.ttml'] },
-  images: { prefix: 'images/', exts: ['.jpg', '.jpeg', '.png', '.webp', '.gif'] },
+  audio:          { prefix: 'audio/',          exts: ['.mp3'] },
+  lyrics:         { prefix: 'lyrics/',         exts: ['.ttml'] },
+  images:         { prefix: 'images/',         exts: ['.jpg', '.jpeg', '.png', '.webp', '.gif'] },
+  'singles-audio': { prefix: 'singles/audio/', exts: ['.mp3'] },
+  'singles-lyrics':{ prefix: 'singles/lyrics/',exts: ['.ttml'] },
 } as const;
 
 type FileType = keyof typeof FILE_CONFIG;
@@ -57,7 +61,10 @@ export async function POST(request: NextRequest) {
   const targetFilename = (formData.get('targetFilename') as string) ?? '';
 
   if (!file || !isValidType(type)) {
-    return NextResponse.json({ error: 'File o tipo mancante' }, { status: 400 });
+    return NextResponse.json({
+      error: 'File o tipo mancante',
+      debug: { filePresent: !!file, type, typeValid: isValidType(type) }
+    }, { status: 400 });
   }
 
   const ext = path.extname(file.name).toLowerCase();
