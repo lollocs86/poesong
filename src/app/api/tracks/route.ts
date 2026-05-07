@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/auth';
-import { put, list, head } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
+
+export const maxDuration = 30;
 
 const TRACKS_BLOB_PATH = 'data/extra-tracks.json';
 
@@ -58,15 +60,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Titolo e audioUrl obbligatori' }, { status: 400 });
   }
 
-  const tracks = await readTracks();
-  const newTrack: ExtraTrack = {
-    ...track,
-    id: `extra-${Date.now()}`,
-  };
-  tracks.push(newTrack);
-  await writeTracks(tracks);
-
-  return NextResponse.json(newTrack);
+  try {
+    const tracks = await readTracks();
+    const newTrack: ExtraTrack = {
+      ...track,
+      id: `extra-${Date.now()}`,
+    };
+    tracks.push(newTrack);
+    await writeTracks(tracks);
+    return NextResponse.json(newTrack);
+  } catch (err) {
+    return NextResponse.json({ error: `Errore salvataggio: ${err instanceof Error ? err.message : String(err)}` }, { status: 500 });
+  }
 }
 
 export async function DELETE(request: NextRequest) {
