@@ -211,6 +211,7 @@ export default function AdminMediaPage() {
             onUploadAudio={() => triggerUpload({ type: 'audio', targetFilename: '', trackTitle: 'singolo' })}
             onUploadLyrics={() => triggerUpload({ type: 'lyrics', targetFilename: '', trackTitle: 'singolo' })}
             onDelete={(filename, type) => handleDelete(filename, type)}
+            onTrackCreated={() => setMessage({ type: 'success', text: 'Traccia creata. Ora visibile nel player.' })}
           />
         )}
       </div>
@@ -292,46 +293,166 @@ function TrackSection({ title, type, tracks, existingFiles, uploading, onUpload,
   );
 }
 
-function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics, onDelete }: {
+function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics, onDelete, onTrackCreated }: {
   audioFiles: BlobFile[]; lyricsFiles: BlobFile[];
   onUploadAudio: () => void; onUploadLyrics: () => void;
   onDelete: (filename: string, type: FileType) => void;
+  onTrackCreated: () => void;
 }) {
+  const [form, setForm] = useState({ title: '', artist: 'Poesong', albumId: albums[0].id, duration: '', audioUrl: '', lyricsUrl: '' });
+  const [saving, setSaving] = useState(false);
+
+  async function handleCreate(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch('/api/tracks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: form.title,
+          artist: form.artist,
+          album: albums.find((a) => a.id === form.albumId)?.title ?? '',
+          albumId: form.albumId,
+          duration: Number(form.duration) || 0,
+          audioUrl: form.audioUrl,
+          lyricsUrl: form.lyricsUrl || undefined,
+        }),
+      });
+      if (res.ok) {
+        setForm({ title: '', artist: 'Poesong', albumId: albums[0].id, duration: '', audioUrl: '', lyricsUrl: '' });
+        onTrackCreated();
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {([
-        { title: 'Audio MP3', files: audioFiles, type: 'audio' as FileType, onUpload: onUploadAudio },
-        { title: 'Testi TTML', files: lyricsFiles, type: 'lyrics' as FileType, onUpload: onUploadLyrics },
-      ] as const).map(({ title, files, type, onUpload }) => (
-        <div key={type} className="bg-gray-800 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">{title}</h2>
-            <button onClick={onUpload} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-lg transition-colors">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-              Carica singolo
+    <div className="space-y-6">
+      {/* File lists */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {([
+          { title: 'Audio MP3', files: audioFiles, type: 'audio' as FileType, onUpload: onUploadAudio },
+          { title: 'Testi TTML', files: lyricsFiles, type: 'lyrics' as FileType, onUpload: onUploadLyrics },
+        ] as const).map(({ title, files, type, onUpload }) => (
+          <div key={type} className="bg-gray-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">{title}</h2>
+              <button onClick={onUpload} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                Carica
+              </button>
+            </div>
+            <div className="space-y-1.5 max-h-60 overflow-y-auto">
+              {files.length === 0 ? (
+                <p className="text-gray-500 text-sm text-center py-6">Nessun file caricato</p>
+              ) : (
+                files.map((f) => (
+                  <div key={f.name} className="flex items-center gap-3 py-2 px-3 bg-gray-700/50 rounded-lg group hover:bg-gray-700 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-gray-300 text-sm font-mono truncate">{f.name}</div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100">
+                      <a href={f.url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors text-xs">URL</a>
+                      <button onClick={() => onDelete(f.name, type)} className="text-gray-600 hover:text-red-400 transition-colors p-1" title="Elimina">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Crea traccia form */}
+      <div className="bg-gray-800 rounded-xl p-6">
+        <h2 className="text-lg font-semibold text-white mb-6">Crea traccia</h2>
+        <form onSubmit={handleCreate} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Titolo *</label>
+              <input
+                required
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Nome brano"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Artista</label>
+              <input
+                value={form.artist}
+                onChange={(e) => setForm({ ...form, artist: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Album</label>
+              <select
+                value={form.albumId}
+                onChange={(e) => setForm({ ...form, albumId: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                {albums.map((a) => <option key={a.id} value={a.id}>{a.title}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Durata (secondi)</label>
+              <input
+                type="number"
+                min="0"
+                value={form.duration}
+                onChange={(e) => setForm({ ...form, duration: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="es. 213"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">File Audio *</label>
+              <select
+                required
+                value={form.audioUrl}
+                onChange={(e) => setForm({ ...form, audioUrl: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="">— seleziona MP3 —</option>
+                {audioFiles.map((f) => <option key={f.url} value={f.url}>{f.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">File Testo (opzionale)</label>
+              <select
+                value={form.lyricsUrl}
+                onChange={(e) => setForm({ ...form, lyricsUrl: e.target.value })}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="">— nessuno —</option>
+                {lyricsFiles.map((f) => <option key={f.url} value={f.url}>{f.name}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-900 text-white font-semibold rounded-lg transition-colors"
+            >
+              {saving ? 'Salvataggio...' : 'Crea traccia'}
             </button>
           </div>
-          <div className="space-y-1.5 max-h-96 overflow-y-auto">
-            {files.length === 0 ? (
-              <p className="text-gray-500 text-sm text-center py-8">Nessun singolo caricato</p>
-            ) : (
-              files.map((f) => (
-                <div key={f.name} className="flex items-center gap-3 py-2.5 px-3 bg-gray-700/50 rounded-lg group hover:bg-gray-700 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <div className="text-gray-300 text-sm font-mono truncate">{f.name}</div>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100">
-                    <a href={f.url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors text-xs">URL</a>
-                    <button onClick={() => onDelete(f.name, type)} className="text-gray-600 hover:text-red-400 transition-colors p-1" title="Elimina">
-                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      ))}
+        </form>
+      </div>
     </div>
   );
 }

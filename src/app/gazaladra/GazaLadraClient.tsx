@@ -11,7 +11,17 @@ import { Track } from '@/types';
 
 export function GazaLadraClient() {
   const [showFullLyrics, setShowFullLyrics] = useState(false);
+  const [extraTracks, setExtraTracks] = useState<Track[]>([]);
   const { increment, getPlayCount } = usePlayCounts();
+
+  useEffect(() => {
+    fetch('/api/tracks')
+      .then((r) => r.json())
+      .then((all: Track[]) => setExtraTracks(all.filter((t) => (t as Track & { albumId?: string }).albumId === 'gazaladra')))
+      .catch(() => {});
+  }, []);
+
+  const allTracks = [...gazaLadraAlbum.tracks, ...extraTracks];
 
   const {
     currentTrack,
@@ -28,11 +38,12 @@ export function GazaLadraClient() {
     nextTrack,
     previousTrack,
     setPlaylist,
-  } = useMusicPlayer(gazaLadraAlbum.tracks, increment);
+  } = useMusicPlayer(allTracks, increment);
 
   useEffect(() => {
-    setPlaylist(gazaLadraAlbum.tracks);
-  }, [setPlaylist]);
+    setPlaylist(allTracks);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extraTracks, setPlaylist]);
 
   return (
     <>
@@ -63,7 +74,7 @@ export function GazaLadraClient() {
 
             {/* Music Player with shared state */}
             <MusicPlayerWithState
-              tracks={gazaLadraAlbum.tracks}
+              tracks={allTracks}
               albumCover={gazaLadraAlbum.coverUrl}
               albumTitle={gazaLadraAlbum.title}
               albumArtist={gazaLadraAlbum.artist}
