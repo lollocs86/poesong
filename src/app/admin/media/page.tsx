@@ -6,26 +6,18 @@ import Link from 'next/link';
 import { albums } from '@/data/albums';
 import type { Album, Track } from '@/types';
 
-type FileType = 'audio' | 'lyrics';
+type FileType = 'audio' | 'lyrics' | 'singles-audio' | 'singles-lyrics';
 type ViewMode = 'album' | 'singles';
 
 interface BlobFile { name: string; url: string; }
 interface Message { type: 'success' | 'error'; text: string; }
 interface UploadTarget { type: FileType; targetFilename: string; trackTitle: string; }
 
-// All filenames referenced by any album track
-const allAlbumFilenames = new Set<string>(
-  albums.flatMap((a) =>
-    a.tracks.flatMap((t) => [
-      t.audioUrl.split('/').pop() ?? '',
-      t.lyricsUrl?.split('/').pop() ?? '',
-    ])
-  )
-);
-
 export default function AdminMediaPage() {
   const [audioFiles, setAudioFiles] = useState<BlobFile[]>([]);
   const [lyricsFiles, setLyricsFiles] = useState<BlobFile[]>([]);
+  const [singlesAudio, setSinglesAudio] = useState<BlobFile[]>([]);
+  const [singlesLyrics, setSinglesLyrics] = useState<BlobFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState<string | null>(null);
   const [message, setMessage] = useState<Message | null>(null);
@@ -50,12 +42,16 @@ export default function AdminMediaPage() {
   }
 
   async function fetchFiles() {
-    const [audioRes, lyricsRes] = await Promise.all([
+    const [audioRes, lyricsRes, saRes, slRes] = await Promise.all([
       fetch('/api/upload?type=audio'),
       fetch('/api/upload?type=lyrics'),
+      fetch('/api/upload?type=singles-audio'),
+      fetch('/api/upload?type=singles-lyrics'),
     ]);
     if (audioRes.ok) setAudioFiles((await audioRes.json()).files);
     if (lyricsRes.ok) setLyricsFiles((await lyricsRes.json()).files);
+    if (saRes.ok) setSinglesAudio((await saRes.json()).files);
+    if (slRes.ok) setSinglesLyrics((await slRes.json()).files);
   }
 
   const audioSet = new Set(audioFiles.map((f) => f.name));
@@ -63,14 +59,18 @@ export default function AdminMediaPage() {
 
   function triggerUpload(target: UploadTarget) {
     pendingUpload.current = target;
-    if (target.type === 'audio') audioInputRef.current?.click();
+    if (target.type === 'audio' || target.type === 'singles-audio') audioInputRef.current?.click();
     else lyricsInputRef.current?.click();
   }
 
-  async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>, type: FileType) {
+  async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>, inputType: 'audio' | 'lyrics') {
     const file = e.target.files?.[0];
     const target = pendingUpload.current;
-    if (!file || !target || target.type !== type) return;
+    if (!file || !target) return;
+    const isAudio = target.type === 'audio' || target.type === 'singles-audio';
+    const isLyrics = target.type === 'lyrics' || target.type === 'singles-lyrics';
+    if (inputType === 'audio' && !isAudio) return;
+    if (inputType === 'lyrics' && !isLyrics) return;
 
     setUploading(target.targetFilename || file.name);
     setMessage(null);
@@ -118,8 +118,8 @@ export default function AdminMediaPage() {
     );
   }
 
-  const singleAudioFiles = audioFiles.filter((f) => !allAlbumFilenames.has(f.name));
-  const singleLyricsFiles = lyricsFiles.filter((f) => !allAlbumFilenames.has(f.name));
+  const singleAudioFiles = singlesAudio;
+  const singleLyricsFiles = singlesLyrics;
 
   return (
     <div className="min-h-[80vh] bg-gray-900 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -208,8 +208,8 @@ export default function AdminMediaPage() {
           <SinglesSection
             audioFiles={singleAudioFiles}
             lyricsFiles={singleLyricsFiles}
-            onUploadAudio={() => triggerUpload({ type: 'audio', targetFilename: '', trackTitle: 'singolo' })}
-            onUploadLyrics={() => triggerUpload({ type: 'lyrics', targetFilename: '', trackTitle: 'singolo' })}
+            onUploadAudio={() => triggerUpload({ type: 'singles-audio', targetFilename: '', trackTitle: 'singolo' })}
+            onUploadLyrics={() => triggerUpload({ type: 'singles-lyrics', targetFilename: '', trackTitle: 'singolo' })}
             onDelete={(filename, type) => handleDelete(filename, type)}
             onTrackCreated={() => setMessage({ type: 'success', text: 'Traccia creata. Ora visibile nel player.' })}
           />
@@ -323,7 +323,10 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
 
   async function handleCreate(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!audioFiles[0]) return;
+    if (!audioFiles[0]) {
+      alert('Carica prima un file MP3 nella sezione Audio MP3.');
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch('/api/tracks', {
@@ -340,11 +343,16 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
           coverUrl: form.coverUrl || undefined,
         }),
       });
+      const data = await res.json();
       if (res.ok) {
         setForm({ title: '', artist: 'Poesong', coverUrl: '' });
         onTrackCreated();
         window.open('/singoli', '_blank');
+      } else {
+        alert(`Errore: ${data.error || res.status}`);
       }
+    } catch (err) {
+      alert(`Errore connessione: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setSaving(false);
     }
@@ -355,8 +363,8 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       {/* File lists */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {([
-          { title: 'Audio MP3', files: audioFiles, type: 'audio' as FileType, onUpload: onUploadAudio },
-          { title: 'Testi TTML', files: lyricsFiles, type: 'lyrics' as FileType, onUpload: onUploadLyrics },
+          { title: 'Audio MP3', files: audioFiles, type: 'singles-audio' as FileType, onUpload: onUploadAudio },
+          { title: 'Testi TTML', files: lyricsFiles, type: 'singles-lyrics' as FileType, onUpload: onUploadLyrics },
         ] as const).map(({ title, files, type, onUpload }) => (
           <div key={type} className="bg-gray-800 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
