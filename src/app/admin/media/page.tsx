@@ -306,8 +306,9 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   const [uploadingImage, setUploadingImage] = useState(false);
   const [tracks, setTracks] = useState<SingleTrack[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
-
 
   useEffect(() => { fetchTracks(); }, []);
 
@@ -320,8 +321,8 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   }
 
   async function handleDeleteTrack(id: string) {
-    if (!confirm('Eliminare questa traccia?')) return;
     setDeletingId(id);
+    setConfirmDeleteId(null);
     const res = await fetch(`/api/tracks?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     if (res.ok) await fetchTracks();
     setDeletingId(null);
@@ -347,9 +348,10 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   async function handleCreate(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!audioFiles[0]) {
-      alert('Carica prima un file MP3 nella sezione Audio MP3.');
+      setFormError('Carica prima un file MP3.');
       return;
     }
+    setFormError(null);
     setSaving(true);
     try {
       const res = await fetch('/api/tracks', {
@@ -372,10 +374,10 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
         await fetchTracks();
         onTrackCreated();
       } else {
-        alert(`Errore: ${data.error || res.status}`);
+        setFormError(`Errore: ${data.error || res.status}`);
       }
     } catch (err) {
-      alert(`Errore connessione: ${err instanceof Error ? err.message : String(err)}`);
+      setFormError(`Errore connessione: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setSaving(false);
     }
@@ -444,8 +446,15 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
                   <p className="text-sm font-medium text-white truncate">{t.title}</p>
                   <p className="text-xs text-gray-400 truncate">{t.artist}</p>
                 </div>
+                {confirmDeleteId === t.id ? (
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <span className="text-xs text-gray-400">Elimina?</span>
+                    <button onClick={() => handleDeleteTrack(t.id)} className="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors">Sì</button>
+                    <button onClick={() => setConfirmDeleteId(null)} className="px-2 py-0.5 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded transition-colors">No</button>
+                  </div>
+                ) : (
                 <button
-                  onClick={() => handleDeleteTrack(t.id)}
+                  onClick={() => setConfirmDeleteId(t.id)}
                   disabled={deletingId === t.id}
                   className="opacity-40 hover:opacity-100 text-gray-500 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
                   title="Elimina traccia"
@@ -454,6 +463,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
                     ? <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                     : <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>}
                 </button>
+                )}
               </div>
             ))}
           </div>
@@ -522,6 +532,9 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             </div>
           </div>
 
+          {formError && (
+            <p className="text-red-400 text-sm">{formError}</p>
+          )}
           <div className="flex justify-end pt-2">
             <button
               type="submit"
