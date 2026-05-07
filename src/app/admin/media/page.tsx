@@ -302,6 +302,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   const [form, setForm] = useState({ title: '', artist: 'Poesong', coverUrl: '' });
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [lastCreated, setLastCreated] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -346,8 +347,8 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       const data = await res.json();
       if (res.ok) {
         setForm({ title: '', artist: 'Poesong', coverUrl: '' });
+        setLastCreated(true);
         onTrackCreated();
-        window.open('/singoli', '_blank');
       } else {
         alert(`Errore: ${data.error || res.status}`);
       }
@@ -459,7 +460,18 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-between pt-2">
+            {lastCreated ? (
+              <a
+                href="/singoli"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 bg-green-700 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors text-sm"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                Vai a Singoli
+              </a>
+            ) : <div />}
             <button
               type="submit"
               disabled={saving || uploadingImage}
