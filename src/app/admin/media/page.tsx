@@ -299,7 +299,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   onDelete: (filename: string, type: FileType) => void;
   onTrackCreated: () => void;
 }) {
-  const [form, setForm] = useState({ title: '', artist: 'Poesong', albumId: albums[0].id, audioUrl: '', lyricsUrl: '', coverUrl: '' });
+  const [form, setForm] = useState({ title: '', artist: 'Poesong', coverUrl: '' });
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -323,6 +323,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
 
   async function handleCreate(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!audioFiles[0]) return;
     setSaving(true);
     try {
       const res = await fetch('/api/tracks', {
@@ -331,16 +332,16 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
         body: JSON.stringify({
           title: form.title,
           artist: form.artist,
-          album: albums.find((a) => a.id === form.albumId)?.title ?? '',
-          albumId: form.albumId,
+          album: 'Singoli',
+          albumId: 'singoli',
           duration: 0,
-          audioUrl: form.audioUrl,
-          lyricsUrl: form.lyricsUrl || undefined,
+          audioUrl: audioFiles[0].url,
+          lyricsUrl: lyricsFiles[0]?.url,
           coverUrl: form.coverUrl || undefined,
         }),
       });
       if (res.ok) {
-        setForm({ title: '', artist: 'Poesong', albumId: albums[0].id, audioUrl: '', lyricsUrl: '', coverUrl: '' });
+        setForm({ title: '', artist: 'Poesong', coverUrl: '' });
         onTrackCreated();
       }
     } finally {
@@ -415,16 +416,6 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">Album</label>
-              <select
-                value={form.albumId}
-                onChange={(e) => setForm({ ...form, albumId: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                {albums.map((a) => <option key={a.id} value={a.id}>{a.title}</option>)}
-              </select>
-            </div>
-            <div>
               <label className="block text-xs font-medium text-gray-400 mb-1.5">Immagine copertina</label>
               <div className="flex items-center gap-3">
                 {form.coverUrl ? (
@@ -447,29 +438,15 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">File Audio *</label>
-              <select
-                required
-                value={form.audioUrl}
-                onChange={(e) => setForm({ ...form, audioUrl: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="">— seleziona MP3 —</option>
-                {audioFiles.map((f) => <option key={f.url} value={f.url}>{f.name}</option>)}
-              </select>
+          {/* Auto-linked files */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg">
+              <p className="text-xs text-gray-500 mb-0.5">Audio</p>
+              <p className="text-sm text-gray-300 font-mono truncate">{audioFiles[0]?.name ?? <span className="text-red-400">nessun file caricato</span>}</p>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-400 mb-1.5">File Testo (opzionale)</label>
-              <select
-                value={form.lyricsUrl}
-                onChange={(e) => setForm({ ...form, lyricsUrl: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="">— nessuno —</option>
-                {lyricsFiles.map((f) => <option key={f.url} value={f.url}>{f.name}</option>)}
-              </select>
+            <div className="px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg">
+              <p className="text-xs text-gray-500 mb-0.5">Testo</p>
+              <p className="text-sm text-gray-300 font-mono truncate">{lyricsFiles[0]?.name ?? <span className="text-gray-500">—</span>}</p>
             </div>
           </div>
 
