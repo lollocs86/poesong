@@ -293,6 +293,8 @@ function TrackSection({ title, type, tracks, existingFiles, uploading, onUpload,
   );
 }
 
+interface SingleTrack { id: string; title: string; artist: string; coverUrl?: string; audioUrl: string; }
+
 function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics, onDelete, onTrackCreated }: {
   audioFiles: BlobFile[]; lyricsFiles: BlobFile[];
   onUploadAudio: () => void; onUploadLyrics: () => void;
@@ -302,8 +304,28 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   const [form, setForm] = useState({ title: '', artist: 'Poesong', coverUrl: '' });
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [lastCreated, setLastCreated] = useState(false);
+  const [tracks, setTracks] = useState<SingleTrack[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+
+  useEffect(() => { fetchTracks(); }, []);
+
+  async function fetchTracks() {
+    const res = await fetch('/api/tracks');
+    if (res.ok) {
+      const all = await res.json() as (SingleTrack & { albumId?: string })[];
+      setTracks(all.filter((t) => t.albumId === 'singoli'));
+    }
+  }
+
+  async function handleDeleteTrack(id: string) {
+    if (!confirm('Eliminare questa traccia?')) return;
+    setDeletingId(id);
+    const res = await fetch(`/api/tracks?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (res.ok) await fetchTracks();
+    setDeletingId(null);
+  }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -347,7 +369,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
       const data = await res.json();
       if (res.ok) {
         setForm({ title: '', artist: 'Poesong', coverUrl: '' });
-        setLastCreated(true);
+        await fetchTracks();
         onTrackCreated();
       } else {
         alert(`Errore: ${data.error || res.status}`);
@@ -396,6 +418,46 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Tracce create */}
+      <div className="bg-gray-800 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-white">Tracce ({tracks.length})</h2>
+          <a href="/singoli" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white text-xs font-semibold rounded-lg transition-colors">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            Vai a Singoli
+          </a>
+        </div>
+        {tracks.length === 0 ? (
+          <p className="text-gray-500 text-sm text-center py-4">Nessuna traccia creata</p>
+        ) : (
+          <div className="space-y-2">
+            {tracks.map((t) => (
+              <div key={t.id} className="flex items-center gap-3 py-2.5 px-3 bg-gray-700/50 rounded-lg group hover:bg-gray-700 transition-colors">
+                {t.coverUrl
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={t.coverUrl} alt={t.title} className="w-9 h-9 rounded object-cover flex-shrink-0" />
+                  : <div className="w-9 h-9 rounded bg-gradient-to-br from-purple-600 to-pink-500 flex-shrink-0" />}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{t.title}</p>
+                  <p className="text-xs text-gray-400 truncate">{t.artist}</p>
+                </div>
+                <button
+                  onClick={() => handleDeleteTrack(t.id)}
+                  disabled={deletingId === t.id}
+                  className="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-400 transition-colors p-1 disabled:opacity-50"
+                  title="Elimina traccia"
+                >
+                  {deletingId === t.id
+                    ? <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                    : <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Crea traccia form */}
@@ -460,18 +522,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
-            {lastCreated ? (
-              <a
-                href="/singoli"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-green-700 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors text-sm"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                Vai a Singoli
-              </a>
-            ) : <div />}
+          <div className="flex justify-end pt-2">
             <button
               type="submit"
               disabled={saving || uploadingImage}
