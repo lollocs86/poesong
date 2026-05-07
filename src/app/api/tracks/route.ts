@@ -83,9 +83,12 @@ export async function DELETE(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'ID mancante' }, { status: 400 });
 
-  const tracks = await readTracks();
-  const filtered = tracks.filter((t) => t.id !== id);
-  await writeTracks(filtered);
-
-  return NextResponse.json({ success: true });
+  try {
+    const tracks = await readTracks();
+    const filtered = tracks.filter((t) => t.id !== id);
+    await writeTracks(filtered);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: `Errore eliminazione: ${err instanceof Error ? err.message : String(err)}` }, { status: 500 });
+  }
 }

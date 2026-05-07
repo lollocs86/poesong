@@ -307,6 +307,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   const [tracks, setTracks] = useState<SingleTrack[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
@@ -323,9 +324,22 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
   async function handleDeleteTrack(id: string) {
     setDeletingId(id);
     setConfirmDeleteId(null);
-    const res = await fetch(`/api/tracks?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-    if (res.ok) await fetchTracks();
-    setDeletingId(null);
+    setDeleteError(null);
+    try {
+      const res = await fetch(`/api/tracks?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (res.ok) {
+        await fetchTracks();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setDeleteError(data.error || `Errore ${res.status}`);
+        setConfirmDeleteId(id);
+      }
+    } catch (err) {
+      setDeleteError(`Errore connessione: ${err instanceof Error ? err.message : String(err)}`);
+      setConfirmDeleteId(id);
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -432,6 +446,7 @@ function SinglesSection({ audioFiles, lyricsFiles, onUploadAudio, onUploadLyrics
             Vai a Singoli
           </a>
         </div>
+        {deleteError && <p className="text-red-400 text-sm mb-3">{deleteError}</p>}
         {tracks.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-4">Nessuna traccia creata</p>
         ) : (
