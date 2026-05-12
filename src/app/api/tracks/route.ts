@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/auth';
-import { put, list } from '@vercel/blob';
+import { put } from '@vercel/blob';
+import { readTracks, type ExtraTrack } from '@/lib/tracks';
 
 export const maxDuration = 30;
 
@@ -11,29 +12,6 @@ async function checkAuth() {
   const cookieStore = await cookies();
   const session = cookieStore.get(COOKIE_NAME);
   return session ? verifySessionToken(session.value) : false;
-}
-
-interface ExtraTrack {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  albumId: string;
-  duration: number;
-  audioUrl: string;
-  lyricsUrl?: string;
-}
-
-async function readTracks(): Promise<ExtraTrack[]> {
-  try {
-    const { blobs } = await list({ prefix: TRACKS_BLOB_PATH });
-    const blob = blobs.find((b) => b.pathname === TRACKS_BLOB_PATH);
-    if (!blob) return [];
-    const res = await fetch(`${blob.url}?t=${Date.now()}`, { cache: 'no-store' });
-    return await res.json();
-  } catch {
-    return [];
-  }
 }
 
 async function writeTracks(tracks: ExtraTrack[]) {

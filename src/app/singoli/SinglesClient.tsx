@@ -205,7 +205,11 @@ function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, pl
         : <div className="w-10 h-10 rounded bg-gradient-to-br from-purple-600 to-pink-500 flex-shrink-0" />}
 
       <div className="flex-1 text-left min-w-0">
-        <p className={`text-sm font-medium truncate ${isCurrentTrack ? 'text-purple-400' : ''}`}>{track.title}</p>
+        <a
+          href={`/singoli/${track.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className={`text-sm font-medium truncate block hover:underline ${isCurrentTrack ? 'text-purple-400' : ''}`}
+        >{track.title}</a>
         <p className="text-xs text-white/50 truncate">{track.artist}</p>
       </div>
 
@@ -257,7 +261,7 @@ function TrackRow({ track, index, isCurrentTrack, isPlaying, onPlay, onShare, pl
 
 function ShareModal({ track, onClose }: { track: Track; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/singoli`;
+  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://poesong.it'}/singoli/${track.id}`;
   const shareText = `Ascolta "${track.title}" di ${track.artist} su PoeSong`;
 
   const handleCopy = async () => {
