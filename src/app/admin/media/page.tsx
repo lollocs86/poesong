@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { albums } from '@/data/albums';
 import type { Album, Track } from '@/types';
+import type { DynamicAlbum } from '@/lib/dynamic-albums';
 
 type FileType = 'audio' | 'lyrics' | 'singles-audio' | 'singles-lyrics';
-type ViewMode = 'album' | 'singles';
+type ViewMode = 'album' | 'dynamic-album' | 'singles';
 
 interface BlobFile { name: string; url: string; }
 interface Message { type: 'success' | 'error'; text: string; }
@@ -23,6 +24,8 @@ export default function AdminMediaPage() {
   const [message, setMessage] = useState<Message | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('album');
   const [selectedAlbum, setSelectedAlbum] = useState<Album>(albums[0]);
+  const [dynamicAlbums, setDynamicAlbums] = useState<DynamicAlbum[]>([]);
+  const [selectedDynamicAlbum, setSelectedDynamicAlbum] = useState<DynamicAlbum | null>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const lyricsInputRef = useRef<HTMLInputElement>(null);
   const pendingUpload = useRef<UploadTarget | null>(null);
@@ -42,16 +45,21 @@ export default function AdminMediaPage() {
   }
 
   async function fetchFiles() {
-    const [audioRes, lyricsRes, saRes, slRes] = await Promise.all([
+    const [audioRes, lyricsRes, saRes, slRes, albumsRes] = await Promise.all([
       fetch('/api/upload?type=audio'),
       fetch('/api/upload?type=lyrics'),
       fetch('/api/upload?type=singles-audio'),
       fetch('/api/upload?type=singles-lyrics'),
+      fetch('/api/albums'),
     ]);
     if (audioRes.ok) setAudioFiles((await audioRes.json()).files);
     if (lyricsRes.ok) setLyricsFiles((await lyricsRes.json()).files);
     if (saRes.ok) setSinglesAudio((await saRes.json()).files);
     if (slRes.ok) setSinglesLyrics((await slRes.json()).files);
+    if (albumsRes.ok) {
+      const dynAlbums: DynamicAlbum[] = await albumsRes.json();
+      setDynamicAlbums(dynAlbums);
+    }
   }
 
   const audioSet = new Set(audioFiles.map((f) => f.name));
@@ -133,9 +141,13 @@ export default function AdminMediaPage() {
             <h1 className="text-2xl font-bold text-white">Gestione Media</h1>
             <p className="text-gray-400 text-sm mt-1">Carica e gestisci file audio e testi</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Link href="/admin/dashboard" className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors">← Pannello</Link>
             <Link href="/admin/blog" className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors">Blog</Link>
+            <Link href="/admin/media/new-album" className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+              Carica nuovo album
+            </Link>
           </div>
         </div>
 
@@ -150,6 +162,19 @@ export default function AdminMediaPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   viewMode === 'album' && selectedAlbum.id === album.id
                     ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                }`}
+              >
+                {album.title}
+              </button>
+            ))}
+            {dynamicAlbums.map((album) => (
+              <button
+                key={album.id}
+                onClick={() => { setViewMode('dynamic-album'); setSelectedDynamicAlbum(album); }}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  viewMode === 'dynamic-album' && selectedDynamicAlbum?.id === album.id
+                    ? 'bg-indigo-600 text-white'
                     : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                 }`}
               >
@@ -204,6 +229,18 @@ export default function AdminMediaPage() {
               />
             </div>
           </>
+        ) : viewMode === 'dynamic-album' && selectedDynamicAlbum ? (
+          <DynamicAlbumSection album={selectedDynamicAlbum} onDelete={async (id) => {
+            const res = await fetch(`/api/albums?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+            if (res.ok) {
+              setDynamicAlbums((prev) => prev.filter((a) => a.id !== id));
+              setViewMode('album');
+              setSelectedAlbum(albums[0]);
+              setMessage({ type: 'success', text: 'Album eliminato.' });
+            } else {
+              setMessage({ type: 'error', text: 'Errore eliminazione album.' });
+            }
+          }} />
         ) : (
           <SinglesSection
             audioFiles={singleAudioFiles}
@@ -288,6 +325,61 @@ function TrackSection({ title, type, tracks, existingFiles, uploading, onUpload,
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+function DynamicAlbumSection({ album, onDelete }: { album: DynamicAlbum; onDelete: (id: string) => void }) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  return (
+    <div className="space-y-4">
+      <div className="bg-gray-800 rounded-xl p-6">
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex items-center gap-4">
+            {album.coverUrl
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={album.coverUrl} alt={album.title} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+              : <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-700 to-blue-900 flex-shrink-0" />}
+            <div>
+              <h2 className="text-lg font-semibold text-white">{album.title}</h2>
+              <p className="text-gray-400 text-sm">{album.artist}{album.releaseYear ? ` · ${album.releaseYear}` : ''}</p>
+              <p className="text-gray-500 text-xs mt-0.5">{album.tracks.length} trac{album.tracks.length === 1 ? 'cia' : 'ce'}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <a href={`/album/${album.id}`} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-semibold rounded-lg transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+              Vai all&apos;album
+            </a>
+            {confirmDelete ? (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-gray-400">Eliminare album?</span>
+                <button onClick={() => onDelete(album.id)} className="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-xs rounded">Sì</button>
+                <button onClick={() => setConfirmDelete(false)} className="px-2 py-0.5 bg-gray-600 hover:bg-gray-500 text-white text-xs rounded">No</button>
+              </div>
+            ) : (
+              <button onClick={() => setConfirmDelete(true)} className="p-1.5 text-gray-500 hover:text-red-400 transition-colors opacity-40 hover:opacity-100" title="Elimina album">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          {album.tracks.map((t, i) => (
+            <div key={t.id} className="flex items-center gap-3 py-2 px-3 bg-gray-700/50 rounded-lg">
+              <span className="text-gray-500 text-xs w-5">{i + 1}.</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-gray-300 text-sm truncate">{t.title}</p>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <span className={`w-2 h-2 rounded-full ${t.audioUrl ? 'bg-green-400' : 'bg-red-500'}`} title="MP3" />
+                <span className={`w-2 h-2 rounded-full ${t.lyricsUrl ? 'bg-green-400' : 'bg-gray-600'}`} title="TTML" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

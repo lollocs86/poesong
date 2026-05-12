@@ -18,6 +18,8 @@ const FILE_CONFIG = {
   images:         { prefix: 'images/',         exts: ['.jpg', '.jpeg', '.png', '.webp', '.gif'] },
   'singles-audio': { prefix: 'singles/audio/', exts: ['.mp3'] },
   'singles-lyrics':{ prefix: 'singles/lyrics/',exts: ['.ttml'] },
+  'album-audio':  { prefix: 'albums/audio/',   exts: ['.mp3'] },
+  'album-lyrics': { prefix: 'albums/lyrics/',  exts: ['.ttml'] },
 } as const;
 
 type FileType = keyof typeof FILE_CONFIG;
