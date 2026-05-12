@@ -7,6 +7,7 @@ import { useState } from 'react';
 const menuItems = [
   { href: '/', label: 'Home' },
   { href: '/gazaladra', label: 'Gaza Ladra' },
+  { href: '/singoli', label: 'Singoli' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: "L'autore" },
   { href: '/contact', label: 'Contatti' },
