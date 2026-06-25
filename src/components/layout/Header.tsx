@@ -8,6 +8,7 @@ const menuItems = [
   { href: '/', label: 'Home' },
   { href: '/gazaladra', label: 'Album' },
   { href: '/singoli', label: 'Singoli' },
+  { href: '/lo-spettacolo', label: 'Lo spettacolo' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: "L'autore" },
   { href: '/contact', label: 'Contatti' },
