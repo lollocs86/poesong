@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifySessionToken, COOKIE_NAME } from '@/lib/auth';
 import { put } from '@vercel/blob';
-import { readTracks, type ExtraTrack } from '@/lib/tracks';
+import { readTracks, readTracksSafe, type ExtraTrack } from '@/lib/tracks';
 
 export const maxDuration = 30;
 
@@ -25,7 +25,7 @@ async function writeTracks(tracks: ExtraTrack[]) {
 
 // Public: no auth needed to read tracks (used by app pages)
 export async function GET() {
-  const tracks = await readTracks();
+  const tracks = await readTracksSafe();
   return NextResponse.json(tracks);
 }
 

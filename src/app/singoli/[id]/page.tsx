@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { readTracks } from '@/lib/tracks';
+import { readTracksSafe } from '@/lib/tracks';
 import { SingleTrackClient } from './SingleTrackClient';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const tracks = await readTracks();
+  const tracks = await readTracksSafe();
   const track = tracks.find((t) => t.id === id && t.albumId === 'singoli');
 
   if (!track) {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SingleTrackPage({ params }: Props) {
   const { id } = await params;
-  const tracks = await readTracks();
+  const tracks = await readTracksSafe();
   const track = tracks.find((t) => t.id === id && t.albumId === 'singoli');
 
   if (!track) notFound();
