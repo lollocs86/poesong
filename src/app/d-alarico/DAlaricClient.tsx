@@ -44,15 +44,6 @@ export function DAlaricClient() {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const playCount = getPlayCount(dAlarico.id);
 
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = dAlarico.audioUrl;
-    link.download = `${dAlarico.artist} - ${dAlarico.title}.mp3`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black pb-24">
@@ -132,15 +123,6 @@ export function DAlaricClient() {
                         <path d="M8 5v14l11-7z"/>
                       </svg>
                     )}
-                  </button>
-                  <button
-                    onClick={handleDownload}
-                    className="p-3 text-white/60 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-                    title="Scarica MP3"
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                    </svg>
                   </button>
                 </div>
 

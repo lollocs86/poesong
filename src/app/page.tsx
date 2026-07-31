@@ -181,7 +181,7 @@ export default function Home() {
               Per la musica, al momento, interagisco con l&apos;AI di <a href="https://suno.ai" target="_blank" rel="noopener noreferrer" className="text-white hover:text-white/80 underline decoration-white/50">Suno</a>, che uso anche per scegliere le voci degli interpreti.
             </p>
             <p>
-              L&apos;ideale è ascoltare i brani leggendo i testi. Entrambi si possono scaricare gratuitamente.
+              L&apos;ideale è ascoltare i brani leggendo i testi.
             </p>
             <p>
               Consiglio delle cuffie o una cassa esterna per un audio migliore.
