@@ -199,6 +199,46 @@ export default function Eventi() {
         </div>
 
         <div
+          className="absolute bottom-0 left-0 w-full h-24 bg-[#0f1f35]"
+          style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
+        />
+      </section>
+
+      {/* Pendrive-vinyl card */}
+      <section className="relative overflow-hidden bg-[#0f1f35]">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+            {/* Testo */}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Il viaggio continua <span className="text-[#5b9bd5]">anche fuori dal teatro</span>
+              </h2>
+              <div className="w-16 h-1 bg-[#5b9bd5] rounded-full mb-8" />
+              <p className="text-white/80 text-lg leading-relaxed mb-8">
+                Al termine dello spettacolo saranno disponibili le <strong className="text-white">pendrive-vinyl card</strong> con le musiche di PoeSong e il <strong className="text-white">booklet</strong> con i testi: parole e suoni da portare con sé, per ritrovare le atmosfere e le emozioni del viaggio anche dopo la chiusura del sipario.
+              </p>
+
+              <div className="space-y-3 text-white/80">
+                <p>📅 <strong className="text-white">Sabato 3 ottobre 2026</strong> — 🕣 ore 20:30</p>
+                <p>📅 <strong className="text-white">Domenica 4 ottobre 2026</strong> — 🕡 ore 18:30</p>
+                <p>📍 Cine-Teatro Universal, Cosenza</p>
+              </div>
+            </div>
+
+            {/* Immagine merch */}
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+              <Image
+                src="/images/eventi-pendrive-vinyl-card.jpg"
+                alt="Pendrive-vinyl card e booklet PoeSong"
+                width={1080}
+                height={1336}
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
           className="absolute bottom-0 left-0 w-full h-24 bg-gray-50"
           style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
         />
