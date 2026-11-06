@@ -115,7 +115,7 @@ export default function Eventi() {
             </p>
           </div>
 
-          <div className="mt-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+          <div className="mt-12 max-w-xs sm:max-w-sm mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
             <video
               controls
               preload="metadata"
