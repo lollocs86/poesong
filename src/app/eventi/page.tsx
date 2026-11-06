@@ -76,6 +76,83 @@ export default function Eventi() {
         />
       </section>
 
+      {/* Recap Viareggio - Tramontinversi 2026 */}
+      <section className="relative overflow-hidden bg-[#1e3a5f]">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="inline-flex items-center gap-2 bg-[#5b9bd5]/20 border border-[#5b9bd5]/40 rounded-full px-4 py-1.5 mb-8">
+            <span className="w-2 h-2 bg-[#5b9bd5] rounded-full" />
+            <span className="text-[#9cc5e8] text-sm font-semibold uppercase tracking-widest">
+              30 ottobre 2026 — CRO Darsene 1945, Viareggio
+            </span>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+            Viareggio <span className="text-[#5b9bd5]">— Tramontinversi 2026</span>
+          </h2>
+          <div className="w-16 h-1 bg-[#5b9bd5] rounded-full mb-10" />
+
+          <div className="space-y-6 text-white/80 text-lg leading-relaxed">
+            <p className="text-white/90 italic text-xl">
+              La poesia è tornata alla sua origine: farsi voce, incontro, emozione condivisa.
+            </p>
+            <p>
+              Dopo il successo degli spettacoli a Cosenza, venerdì 30 ottobre, all&apos;ora in cui il sole scivola sulle barche della darsena, <strong className="text-white">PoeSong</strong> ha vissuto un momento magico a Viareggio.
+            </p>
+            <p>
+              All&apos;interno della rassegna di poesia a viva voce <strong className="text-white">&ldquo;Tramontinversi 2026&rdquo;</strong>, la splendida accoglienza del <strong className="text-white">CRO Darsene 1945</strong> ci ha regalato una serata straordinaria e partecipata.
+            </p>
+            <p>
+              I testi e le sonorità dei versi si sono ancora una volta fusi con l&apos;interpretazione magnetica e vibrante di <strong className="text-white">Marisa Casciaro</strong> sul palco, avvolti dalle suggestive visioni grafiche di <strong className="text-white">Laura De Vita</strong>, dalla cura scenica di <strong className="text-white">Nando Pace</strong> e dall&apos;intervento di <strong className="text-white">Leon Pantarei</strong>.
+            </p>
+            <p>
+              Una performance multimediale che ha letteralmente catturato il pubblico, pezzo dopo pezzo, verso dopo verso.
+            </p>
+            <p>
+              In un&apos;epoca assordata dal rumore, ci siamo presi il tempo per tendere l&apos;orecchio e trasformare l&apos;urgenza delle parole in pura suggestione artistica.
+            </p>
+            <p className="text-white/70">
+              Grazie di cuore a <strong className="text-white">Giancarlo Micheli</strong> per la direzione e la cura della rassegna, a tutto lo staff del CRO per l&apos;ospitalità e, soprattutto, a chi ha partecipato condividendo questo splendido pezzo di viaggio insieme a noi.
+            </p>
+          </div>
+
+          <div className="mt-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+            <video
+              controls
+              preload="metadata"
+              playsInline
+              className="w-full h-auto"
+            >
+              <source src="/videos/eventi-viareggio-tramontinversi.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-white/10">
+            <p className="text-white/70 mb-4">
+              Prossima fermata? Per scoprire le nuove tappe e i prossimi appuntamenti, segui PoeSong online:
+            </p>
+            <div className="flex flex-wrap gap-4 text-white/80">
+              <a href="https://poesong.it/" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
+                🌐 Sito Web
+              </a>
+              <a href="https://www.facebook.com/share/1FMXr9MZA4/" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
+                🔵 Facebook
+              </a>
+              <a href="https://www.instagram.com/poesong_?obrf=MXhhejVsN2dvdzhycw==" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
+                📸 Instagram
+              </a>
+              <a href="https://youtube.com/@poesonging?si=ozFnk-SK-En6jQB4" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
+                🔴 YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="absolute bottom-0 left-0 w-full h-24 bg-[#1e3a5f]"
+          style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
+        />
+      </section>
+
       {/* Locandina + info evento */}
       <section className="relative overflow-hidden bg-[#1e3a5f]">
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -234,83 +311,6 @@ export default function Eventi() {
                 height={1336}
                 className="w-full h-auto"
               />
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="absolute bottom-0 left-0 w-full h-24 bg-[#1e3a5f]"
-          style={{ clipPath: 'polygon(0 0, 0 100%, 100% 100%)' }}
-        />
-      </section>
-
-      {/* Recap Viareggio - Tramontinversi 2026 */}
-      <section className="relative overflow-hidden bg-[#1e3a5f]">
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="inline-flex items-center gap-2 bg-[#5b9bd5]/20 border border-[#5b9bd5]/40 rounded-full px-4 py-1.5 mb-8">
-            <span className="w-2 h-2 bg-[#5b9bd5] rounded-full" />
-            <span className="text-[#9cc5e8] text-sm font-semibold uppercase tracking-widest">
-              30 ottobre 2026 — CRO Darsene 1945, Viareggio
-            </span>
-          </div>
-
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            Viareggio <span className="text-[#5b9bd5]">— Tramontinversi 2026</span>
-          </h2>
-          <div className="w-16 h-1 bg-[#5b9bd5] rounded-full mb-10" />
-
-          <div className="space-y-6 text-white/80 text-lg leading-relaxed">
-            <p className="text-white/90 italic text-xl">
-              La poesia è tornata alla sua origine: farsi voce, incontro, emozione condivisa.
-            </p>
-            <p>
-              Dopo il successo degli spettacoli a Cosenza, venerdì 30 ottobre, all&apos;ora in cui il sole scivola sulle barche della darsena, <strong className="text-white">PoeSong</strong> ha vissuto un momento magico a Viareggio.
-            </p>
-            <p>
-              All&apos;interno della rassegna di poesia a viva voce <strong className="text-white">&ldquo;Tramontinversi 2026&rdquo;</strong>, la splendida accoglienza del <strong className="text-white">CRO Darsene 1945</strong> ci ha regalato una serata straordinaria e partecipata.
-            </p>
-            <p>
-              I testi e le sonorità dei versi si sono ancora una volta fusi con l&apos;interpretazione magnetica e vibrante di <strong className="text-white">Marisa Casciaro</strong> sul palco, avvolti dalle suggestive visioni grafiche di <strong className="text-white">Laura De Vita</strong>, dalla cura scenica di <strong className="text-white">Nando Pace</strong> e dall&apos;intervento di <strong className="text-white">Leon Pantarei</strong>.
-            </p>
-            <p>
-              Una performance multimediale che ha letteralmente catturato il pubblico, pezzo dopo pezzo, verso dopo verso.
-            </p>
-            <p>
-              In un&apos;epoca assordata dal rumore, ci siamo presi il tempo per tendere l&apos;orecchio e trasformare l&apos;urgenza delle parole in pura suggestione artistica.
-            </p>
-            <p className="text-white/70">
-              Grazie di cuore a <strong className="text-white">Giancarlo Micheli</strong> per la direzione e la cura della rassegna, a tutto lo staff del CRO per l&apos;ospitalità e, soprattutto, a chi ha partecipato condividendo questo splendido pezzo di viaggio insieme a noi.
-            </p>
-          </div>
-
-          <div className="mt-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
-            <video
-              controls
-              preload="metadata"
-              playsInline
-              className="w-full h-auto"
-            >
-              <source src="/videos/eventi-viareggio-tramontinversi.mp4" type="video/mp4" />
-            </video>
-          </div>
-
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <p className="text-white/70 mb-4">
-              Prossima fermata? Per scoprire le nuove tappe e i prossimi appuntamenti, segui PoeSong online:
-            </p>
-            <div className="flex flex-wrap gap-4 text-white/80">
-              <a href="https://poesong.it/" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
-                🌐 Sito Web
-              </a>
-              <a href="https://www.facebook.com/share/1FMXr9MZA4/" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
-                🔵 Facebook
-              </a>
-              <a href="https://www.instagram.com/poesong_?obrf=MXhhejVsN2dvdzhycw==" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
-                📸 Instagram
-              </a>
-              <a href="https://youtube.com/@poesonging?si=ozFnk-SK-En6jQB4" target="_blank" rel="noopener noreferrer" className="hover:text-[#5b9bd5] transition-colors">
-                🔴 YouTube
-              </a>
             </div>
           </div>
         </div>
