@@ -79,6 +79,16 @@ export default function Eventi() {
       {/* Recap Viareggio - Tramontinversi 2026 */}
       <section className="relative overflow-hidden bg-[#1e3a5f]">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="max-w-xs sm:max-w-sm mx-auto mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+            <Image
+              src="/images/eventi-viareggio-tramontinversi-locandina.jpg"
+              alt="Locandina Tramontinversi 2026 - CRO Darsene 1945, Viareggio, 30 ottobre"
+              width={1227}
+              height={1718}
+              className="w-full h-auto"
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 bg-[#5b9bd5]/20 border border-[#5b9bd5]/40 rounded-full px-4 py-1.5 mb-8">
             <span className="w-2 h-2 bg-[#5b9bd5] rounded-full" />
             <span className="text-[#9cc5e8] text-sm font-semibold uppercase tracking-widest">
@@ -156,13 +166,6 @@ export default function Eventi() {
       {/* Locandina + info evento */}
       <section className="relative overflow-hidden bg-[#1e3a5f]">
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-400/40 rounded-full px-4 py-1.5 mb-8">
-            <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
-            <span className="text-orange-300 text-sm font-semibold uppercase tracking-widest">
-              Prossimo appuntamento
-            </span>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-start">
             {/* Locandina */}
             <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
